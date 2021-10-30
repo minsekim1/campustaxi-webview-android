@@ -8,12 +8,17 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.webkit.WebSettings;
 import java.io.File
+import android.content.Intent
+
+
+
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // 웹뷰 설정 시작
         var myWebView: WebView = findViewById(R.id.webView)
         myWebView.webViewClient = WebViewClient()
 
@@ -31,6 +36,7 @@ class MainActivity : AppCompatActivity() {
         mWebSettings.setAppCacheEnabled(true);
 
         myWebView.loadUrl("http://www.campus-taxi.com/")
+        // 웹뷰 설정 끝
     }
 
 //    웹뷰 뒤로가기
