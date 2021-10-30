@@ -11,8 +11,8 @@ android {
         applicationId "com.campustaxi.campustaxi"
         minSdk 23
         targetSdk 31
-        versionCode 1
-        versionName "1.0"
+        versionCode 32
+        versionName "4.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
