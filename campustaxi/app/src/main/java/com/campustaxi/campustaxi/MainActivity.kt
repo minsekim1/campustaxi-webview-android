@@ -87,7 +87,11 @@ class MainActivity : AppCompatActivity() {
         })
         // 이미지 첨부 설정 끝
 
-        myWebView.loadUrl("http://www.campus-taxi.com/")
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // https 이미지 허용
+            mWebSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        }
+        myWebView.loadUrl("https://www.campus-taxi.com/")
 
     }
 
