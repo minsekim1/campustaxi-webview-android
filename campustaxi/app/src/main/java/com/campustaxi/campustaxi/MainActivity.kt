@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.TargetApi
 import android.app.Activity
 import android.app.AlertDialog
+import android.app.Dialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 
@@ -30,10 +31,12 @@ import android.os.Build
 import androidx.annotation.Nullable
 import androidx.core.app.ActivityCompat.startActivityForResult
 import android.content.DialogInterface
+import android.os.Message
 import android.provider.Settings
 
 import androidx.annotation.NonNull
 import android.os.Parcelable
+import android.view.ViewGroup
 
 import androidx.core.content.FileProvider
 
@@ -58,6 +61,8 @@ class MainActivity : AppCompatActivity() {
         mWebSettings.setJavaScriptEnabled(true); // 웹페이지 자바스클비트 허용 여부
         mWebSettings.setDomStorageEnabled(true);
         mWebSettings.setDatabaseEnabled(true);
+        mWebSettings.setSupportMultipleWindows(true);
+        mWebSettings.javaScriptCanOpenWindowsAutomatically = true;
         var dir : File = getCacheDir();
         if (!dir.exists()) {
             dir.mkdirs();
@@ -68,6 +73,29 @@ class MainActivity : AppCompatActivity() {
 
         // 이미지 첨부 설정 시작
         myWebView.setWebChromeClient(object : WebChromeClient() {
+
+            override fun onCreateWindow(view: WebView?, isDialog: Boolean, isUserGesture: Boolean, resultMsg: Message?): Boolean {
+                val newWebView = WebView(this@MainActivity).apply {
+                    webViewClient = WebViewClient()
+                    settings.javaScriptEnabled = true
+                    settings.userAgentString = "Mozilla/5.0 AppleWebKit/535.19 Chrome/56.0.0 Mobile Safari/535.19";
+                }
+                val dialog = Dialog(this@MainActivity).apply {
+                    setContentView(newWebView)
+                    window!!.attributes.width = ViewGroup.LayoutParams.MATCH_PARENT
+                    window!!.attributes.height = ViewGroup.LayoutParams.MATCH_PARENT
+                    show()
+                }
+                newWebView.webChromeClient = object : WebChromeClient() {
+                    override fun onCloseWindow(window: WebView?) {
+                        dialog.dismiss()
+                    }
+                }
+                (resultMsg?.obj as WebView.WebViewTransport).webView = newWebView
+                resultMsg.sendToTarget()
+                return true
+            }
+
             // For Android 5.0+
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             override fun onShowFileChooser(
@@ -84,6 +112,8 @@ class MainActivity : AppCompatActivity() {
                 runCamera(isCapture)
                 return true
             }
+
+
         })
         // 이미지 첨부 설정 끝
 
